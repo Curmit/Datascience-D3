@@ -1,0 +1,19 @@
+{
+  "name": "web-scraper-d3-project-datascience",
+  "version": "0.0.1",
+  "description": "Project for datascience",
+  "main": "server.js",
+  "author": "Carmen Burghardt",
+  "scripts": {
+    "start": "node server.js", //start the server 
+    "scrape": "node scraper.js" //start the scraper
+  },
+  "dependencies": { // all libaries i am going to use
+    "d3": "*",
+    "express": "*",
+    "jade": "*",
+    "path": "^0.11.14",
+    "request": "*",
+    "x-ray": "*"
+  }
+}
