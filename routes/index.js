@@ -6,8 +6,8 @@ var express = require('express'),
 	router = express.Router();
 
 
-
-router.get('/', function(req, res, next) {//HTTP Request object,HTTP response, next() middelware  chain 
+//HTTP Request object,HTTP response, next() middelware  chain 
+router.get('/', function(req, res, next) {
 	res.render('index');
 });
 

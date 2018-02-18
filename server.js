@@ -8,7 +8,7 @@ var express = require('express'),
 
 
 // app.use??
-// makes path variables
+// makes path
 
 app.use('/node', express.static(__dirname + '/node_modules/'));
 app.use('/scripts', express.static(__dirname + '/scripts'));
@@ -17,7 +17,7 @@ app.use('/stylesheets', express.static(__dirname + '/stylesheets'));
 app.set('view engine', 'jade');
 app.use('/', routes);
 
-app.listen('8081');
+app.listen('7878');
 
 console.log('Server running on port 8081');
 exports = module.exports = app;
