@@ -5,10 +5,10 @@
   "main": "server.js",
   "author": "Carmen Burghardt",
   "scripts": {
-    "start": "node server.js", //start the server 
-    "scrape": "node scraper.js" //start the scraper
+    "start": "node server.js",
+    "scrape": "node scraper.js"
   },
-  "dependencies": { // all libaries i am going to use
+  "dependencies": {
     "d3": "*",
     "express": "*",
     "jade": "*",
