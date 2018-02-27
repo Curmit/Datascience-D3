@@ -2,10 +2,13 @@ import scrapy
 
 class QuotesSpider(scrapy.Spider):
     name = "quotes"
+    globalTag = ""
 
     def start_requests(self):
+        global globalTag
         url = 'http://www.indeed.nl/'
         tag = getattr(self,'tag',None)
+        globalTag = tag
         tags = tag.split(" ")
         for i in range(0,len(tags)):
             tag = tags[i] + "-"
@@ -24,6 +27,7 @@ class QuotesSpider(scrapy.Spider):
         for i in range(0,len(titles)):
             #print("list size: " + str(len(titles)) + "locations size: " + str(len(locations)) + "companies size: " + str(len(companies)))
             yield {
+                'jobSearch': globalTag,
                 'jobTitle': titles[i],
                 'location': locations[i],
         #        'company': companies[i],
