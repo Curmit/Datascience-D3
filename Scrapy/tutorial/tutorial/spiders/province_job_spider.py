@@ -1,7 +1,8 @@
 import scrapy
 
 
-# HOW TO RUN
+# HOW TO RUN:
+# 
 # scrapy crawl provinces -o 'outputfilename'.json -a tag="vacaturenaam"
 #
 
@@ -25,16 +26,22 @@ class QuotesSpider(scrapy.Spider):
                     "noord-brabant",\
                     "limburg"]
         global globalTag
+        # Start url
         url = 'http://www.indeed.nl/'
+        # Getting the tags from the input parameters
         tag = getattr(self,'tag',None)
+        # Globaltag is set to be able to add it to output file
         globalTag = tag
+        # Tags are split i.e. "Data Scientist" gets split to build url
         tags = tag.split(" ")
+        # "-" are added to indivitual tags for URL builder
         for i in range(len(tags)):
             tag = tags[i] + "-"
             tags[i] = tag
 
         tags.append("vacatures-in-")
-
+        # Correct url's are build format: "http://www.indeed.nl/data-scientist-vacatures-in-overijssel"
+        # For each province there is a request done and the spider crawls the page
         for province in provinces:
             url = 'http://www.indeed.nl/'
             for i in tags:
