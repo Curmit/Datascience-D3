@@ -1,7 +1,7 @@
 import scrapy
 
 
-#
+# HOW TO RUN
 # scrapy crawl provinces -o 'outputfilename'.json -a tag="vacaturenaam"
 #
 
