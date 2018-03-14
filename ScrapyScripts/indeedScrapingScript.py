@@ -1,12 +1,12 @@
 import scrapy
 from scrapy.crawler import CrawlerProcess
 
-opleiding = "Biomedical Technology"
-globalTag = "Biomedical researcher wo"
+opleiding = "Chemical Engineering"
+globalTag = "Chemical Engineer wo"
 outputdir = "CrawlerResults//"+ str(opleiding) +"//" + str(globalTag) + ".json"
 
 class QuotesSpider(scrapy.Spider):
-    name = "provinces"
+    name = "provincesIndeed"
     
     def start_requests(self):
         provinces = ["groningen",\

@@ -1,9 +1,9 @@
 import scrapy
-
+import math as mt
 
 # HOW TO RUN:
 # 
-# scrapy crawl provinces -o 'outputfilename'.json -a tag="vacaturenaam"
+# scrapy crawl provincesMonsterboard -o 'outputfilename'.json -a tag="vacaturenaam"
 #
 # baseurl:
 # data scientist
@@ -26,7 +26,8 @@ import scrapy
 # page url:
 # https://www.monsterboard.nl/vacatures/zoeken/boekhouder_5?where=Noord__2DHolland&cy=nl&page=22
 # 
-# 
+# number of vacancies
+# response.xpath('//h2[contains(@class,"page-title visible-xs")]/text()').extract()[0]
 # 
 
 class QuotesSpider(scrapy.Spider):
@@ -35,21 +36,22 @@ class QuotesSpider(scrapy.Spider):
 
 
     def start_requests(self):
-        provinces = ["groningen",\
-                    "friesland",\
-                    "drenthe",\
-                    "overijssel",\
-                    "flevoland",\
-                    "gelderland",\
-                    "utrecht",\
-                    "noord-holland",\
-                    "zuid-holland",\
-                    "zeeland",\
-                    "noord-brabant",\
-                    "limburg"]
+        provinces = ["Groningen",\
+                    "Friesland",\
+                    "Drenthe",\
+                    "Overijssel",\
+                    "Flevoland",\
+                    "Gelderland",\
+                    "Utrecht",\
+                    "Noord__2DHolland",\
+                    "Zuid__2DHolland",\
+                    "Zeeland",\
+                    "Noord__2DBrabant",\
+                    "Limburg"]
         global globalTag
         # Start url
-        url = 'http://www.indeed.nl/'
+        
+        # data-scientist_5?where=Noord__2DHolland&cy=nl'
         # Getting the tags from the input parameters
         tag = getattr(self,'tag',None)
         # Globaltag is set to be able to add it to output file
@@ -57,23 +59,27 @@ class QuotesSpider(scrapy.Spider):
         # Tags are split i.e. "Data Scientist" gets split to build url
         tags = tag.split(" ")
         # "-" are added to indivitual tags for URL builder
-        for i in range(len(tags)):
-            tag = tags[i] + "-"
-            tags[i] = tag
+        for i in range(len(tags)-1):
+            tags[i] = tags[i] + "-"
 
-        tags.append("vacatures-in-")
+        tags.append("_5?where=")
         # Correct url's are build format: "http://www.indeed.nl/data-scientist-vacatures-in-overijssel"
         # For each province there is a request done and the spider crawls the page
         for province in provinces:
-            url = 'http://www.indeed.nl/'
+            url = "https://www.monsterboard.nl/vacatures/zoeken/"
             for i in tags:
                 url += str(i)
             url += province
+            url += "&cy=nl"
             print(url)
-            yield scrapy.Request(url=url, callback=self.parse)
+            response = scrapy.http.TextResponse(url=url)
+            header = response.xpath('//h2[contains(@class,"page-title visible-xs")]/text()').extract()
+            print(header)
+            #yield scrapy.Request(url=url, callback=self.parse)
 
-    def parse(self, response):
-        print(str(self))
+    
+
+    def parseTwo(self, response):
         vacature = response.css('.result')[0]
         titles = vacature.xpath('//h2[contains(@class, "jobtitle")]/a/@title').extract()
         locations = vacature.xpath('//div[contains(@data-tn-component, "organicJob")]/span[contains(@class, "location")]/text()').extract()
