@@ -66,11 +66,11 @@ class QuotesSpider(scrapy.Spider):
         headerList = [int(s) for s in header[0].split() if s.isdigit()]
         numberResult = headerList[0] if len(headerList) > 0 else 0 
         url = response.url
-        urlList = [url]
+        urlList = []
 
         if numberResult > 25:
             pages = mt.ceil(numberResult/25)
-            for i in range(2,pages + 1):
+            for i in range(1,pages + 1):
                 urlList.append(url + "&page=" + str(i))
 
         
