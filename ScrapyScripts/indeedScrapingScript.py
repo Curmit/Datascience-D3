@@ -1,9 +1,9 @@
 import scrapy
 from scrapy.crawler import CrawlerProcess
 
-opleiding = "Chemical Engineering"
-globalTag = "Chemical Engineer wo"
-outputdir = "CrawlerResults//"+ str(opleiding) +"//" + str(globalTag) + ".json"
+opleiding = "Communication Science"
+globalTag = "Brand Manager wo"
+outputdir = "CrawlerResults//IndeedResults//"+ str(opleiding) +"//" + str(globalTag) + ".json"
 
 class QuotesSpider(scrapy.Spider):
     name = "provincesIndeed"
