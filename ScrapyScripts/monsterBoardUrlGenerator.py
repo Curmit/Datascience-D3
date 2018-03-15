@@ -47,7 +47,7 @@ class QuotesSpider(scrapy.Spider):
                 url += str(i)
             url += province
             url += "&cy=nl"
-            print(url)
+            # print(url)
             # response = scrapy.http.TextResponse(url=url)
             # header = response.xpath('//h2[contains(@class,"page-title visible-xs")]/text()').extract()
             # print(header)
@@ -59,10 +59,12 @@ class QuotesSpider(scrapy.Spider):
     #     vacature = response.css('.result')[0]
     #     titles = vacature.xpath('//h2[contains(@class, "jobtitle")]/a/@title').extract()
         # locations = response.xpath('//div[contains(@class,"job-specs-location")]/p/a/text()').extract()
-        # province = response.xpath('//input[contains(@placeholder,"Locatie")]/@value').extract()
+        province = response.xpath('//input[contains(@placeholder,"Locatie")]/@value').extract()[0]
         # titles = response.xpath('//div[contains(@class,"jobTitle")]/h2/a/text()').extract()  
         header = response.xpath('//h2[contains(@class,"page-title visible-xs")]/text()').extract()
         #companies = vacature.xpath('//div[contains(@data-tn-component, "organicJob")]/span[contains(@class, "company")]/text()').extract()
+        if len(header) == 0:
+            header.append("empty")
         headerList = [int(s) for s in header[0].split() if s.isdigit()]
         numberResult = headerList[0] if len(headerList) > 0 else 0 
         url = response.url
@@ -75,11 +77,13 @@ class QuotesSpider(scrapy.Spider):
 
         
         #print("list size: " + str(len(titles)) + "locations size: " + str(len(locations)) + "companies size: " + str(len(companies)))
-        for link in urlList:
+        for i in range(0,len(urlList)):
             if numberResult > 0:
                 yield {
                     'header': numberResult,
-                    'url': link,
+                    'url': urlList[i],
+                    'pageNumber': i + 1,
+                    'province': province,
                 }
         
             
@@ -91,6 +95,7 @@ class QuotesSpider(scrapy.Spider):
 process = CrawlerProcess({
     'USER_AGENT': 'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1)',
     'FEED_FORMAT': 'json',
+    'DOWNLOAD_DELAY': 1,
     'FEED_URI': outputdir
 })
 

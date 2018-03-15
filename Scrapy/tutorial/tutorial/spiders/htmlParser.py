@@ -1,4 +1,5 @@
 import scrapy
+import json
 
 # 
 # Run:
@@ -10,16 +11,13 @@ class QuotesSpider(scrapy.Spider):
 
 
     def start_requests(self):
-        urls = [
-            'https://www.monsterboard.nl/vacatures/zoeken/data-scientist_5?where=Groningen&cy=nl',
-            'https://www.monsterboard.nl/vacatures/zoeken/data-scientist_5?where=Noord__2DHolland&cy=nl',
-        ]
+        urls = json.load(open('../../CrawlerResults/test/testUrl.json'))
         for url in urls:
-            yield scrapy.Request(url=url, callback=self.parse)
+            yield scrapy.Request(url=url['url'], callback=self.parse)
 
     def parse(self, response):
         page = response.url.split("/")[-1]
-        endUrl = page.split("where=")
+        endUrl = page.split("page=")
         function = endUrl[1]
         filename = 'quotes-%s.html' % function
         with open(filename, 'wb') as f:
