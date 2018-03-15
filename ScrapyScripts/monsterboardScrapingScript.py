@@ -4,12 +4,12 @@ import math as mt
 import json
 
 opleiding = "Chemical Engineering"
-globalTag = "Chemical Engineer wo"
-outputdir = "CrawlerResults//test//test.json"
+globalTag = "Copywriter wo"
+outputdir = "CrawlerResults//MonsterboardResults//" + opleiding +  "//" + globalTag + ".json"
 
 class QuotesSpider(scrapy.Spider):
     name = "provincesMonsterboard"
-    globalTag = ""
+    # globalTag = ""
 
 
     def start_requests(self):
@@ -27,10 +27,10 @@ class QuotesSpider(scrapy.Spider):
         #             "Limburg"]
         # global globalTag
         # Start url
-        
+        global globalTag
         # data-scientist_5?where=Noord__2DHolland&cy=nl'
         # Getting the tags from the input parameters
-        globalTag = "boekhouder"
+        
         # Globaltag is set to be able to add it to output file
         # globalTag = tag
         # # Tags are split i.e. "Data Scientist" gets split to build url
@@ -42,7 +42,7 @@ class QuotesSpider(scrapy.Spider):
         # tags.append("_5?where=")
         # Correct url's are build format: "http://www.indeed.nl/data-scientist-vacatures-in-overijssel"
         # For each province there is a request done and the spider crawls the page
-        urls = json.load(open('CrawlerResults/test/testUrl.json'))
+        urls = json.load(open('CrawlerResults/urls/' + globalTag + '.json'))
         for url in urls:
             yield scrapy.Request(url=url['url'], callback=self.parse)
         # for province in provinces:
@@ -73,12 +73,13 @@ class QuotesSpider(scrapy.Spider):
         numberResult = headerList[0] if len(headerList) > 0 else 0 
         url = response.url
         pageNumber = url.split("page=")
+        self.logger.info("Jobtitle size = " + str(len(titles)))
 
         for i in range(0,len(titles)):
             #print("list size: " + str(len(titles)) + "locations size: " + str(len(locations)) + "companies size: " + str(len(companies)))
             if numberResult > 0:
                 yield {
-                    'header': numberResult,
+                    'reportedResults': numberResult,
                     'jobSearch': globalTag,
                     'jobTitle': titles[i],
                     'location': "unkown",
@@ -96,8 +97,9 @@ class QuotesSpider(scrapy.Spider):
 process = CrawlerProcess({
     'USER_AGENT': 'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1)',
     'FEED_FORMAT': 'json',
-    'DOWNLOAD_DELAY': 1,
-    'FEED_URI': outputdir
+    'DOWNLOAD_DELAY': 2,
+    'FEED_URI': outputdir,
+    'COOKIES_ENABLED': False,
 })
 
 process.crawl(QuotesSpider)

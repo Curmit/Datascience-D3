@@ -4,11 +4,11 @@ import math as mt
 
 opleiding = "Communication Science"
 globalTag = "Copywriter wo"
-outputdir = "CrawlerResults//test//testUrl.json"
+outputdir = "CrawlerResults//urls//" + globalTag +".json"
 
 class QuotesSpider(scrapy.Spider):
     name = "provincesMonsterboard"
-    globalTag = ""
+    # globalTag = ""
 
 
     def start_requests(self):
@@ -29,11 +29,11 @@ class QuotesSpider(scrapy.Spider):
         
         # data-scientist_5?where=Noord__2DHolland&cy=nl'
         # Getting the tags from the input parameters
-        tag = "boekhouder"
+        
         # Globaltag is set to be able to add it to output file
-        globalTag = tag
+       
         # Tags are split i.e. "Data Scientist" gets split to build url
-        tags = tag.split(" ")
+        tags = globalTag.split(" ")
         # "-" are added to indivitual tags for URL builder
         for i in range(len(tags)-1):
             tags[i] = tags[i] + "-"
@@ -69,18 +69,19 @@ class QuotesSpider(scrapy.Spider):
         numberResult = headerList[0] if len(headerList) > 0 else 0 
         url = response.url
         urlList = []
+        # self.logger.info("Size of urlList = " + str(len(urlList)))
 
-        if numberResult > 25:
-            pages = mt.ceil(numberResult/25)
-            for i in range(1,pages + 1):
-                urlList.append(url + "&page=" + str(i))
+        
+        pages = mt.ceil(numberResult/25)
+        for i in range(1,pages + 1):
+            urlList.append(url + "&page=" + str(i))
 
         
         #print("list size: " + str(len(titles)) + "locations size: " + str(len(locations)) + "companies size: " + str(len(companies)))
         for i in range(0,len(urlList)):
             if numberResult > 0:
                 yield {
-                    'header': numberResult,
+                    'reportedResults': numberResult,
                     'url': urlList[i],
                     'pageNumber': i + 1,
                     'province': province,
@@ -95,8 +96,9 @@ class QuotesSpider(scrapy.Spider):
 process = CrawlerProcess({
     'USER_AGENT': 'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1)',
     'FEED_FORMAT': 'json',
-    'DOWNLOAD_DELAY': 1,
-    'FEED_URI': outputdir
+    'DOWNLOAD_DELAY': 2,
+    'FEED_URI': outputdir,
+    'COOKIES_ENABLED': False,
 })
 
 process.crawl(QuotesSpider)
