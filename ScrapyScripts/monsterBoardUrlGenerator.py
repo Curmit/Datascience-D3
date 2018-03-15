@@ -2,8 +2,8 @@ import scrapy
 from scrapy.crawler import CrawlerProcess
 import math as mt
 
-opleiding = "Communication Science"
-globalTag = "Copywriter wo"
+# opleiding = "Communication Science"
+globalTag = "Process technology wo"
 outputdir = "CrawlerResults//urls//" + globalTag +".json"
 
 class QuotesSpider(scrapy.Spider):

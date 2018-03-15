@@ -4,7 +4,7 @@ import math as mt
 import json
 
 opleiding = "Chemical Engineering"
-globalTag = "Copywriter wo"
+globalTag = "Process technology wo"
 outputdir = "CrawlerResults//MonsterboardResults//" + opleiding +  "//" + globalTag + ".json"
 
 class QuotesSpider(scrapy.Spider):
