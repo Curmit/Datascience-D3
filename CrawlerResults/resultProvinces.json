@@ -1,0 +1,86 @@
+[
+    {
+        "State": "Groningen",
+        "freq": {
+            "indeed": 315,
+            "monsterboard": 75
+        }
+    },
+    {
+        "State": "Friesland",
+        "freq": {
+            "indeed": 133,
+            "monsterboard": 8
+        }
+    },
+    {
+        "State": "Drenthe",
+        "freq": {
+            "indeed": 88,
+            "monsterboard": 15
+        }
+    },
+    {
+        "State": "Overijssel",
+        "freq": {
+            "indeed": 924,
+            "monsterboard": 94
+        }
+    },
+    {
+        "State": "Flevoland",
+        "freq": {
+            "indeed": 182,
+            "monsterboard": 48
+        }
+    },
+    {
+        "State": "Gelderland",
+        "freq": {
+            "indeed": 1146,
+            "monsterboard": 165
+        }
+    },
+    {
+        "State": "Utrecht",
+        "freq": {
+            "indeed": 2379,
+            "monsterboard": 380
+        }
+    },
+    {
+        "State": "Noord-Holland",
+        "freq": {
+            "indeed": 3970,
+            "monsterboard": 713
+        }
+    },
+    {
+        "State": "Zuid-Holland",
+        "freq": {
+            "indeed": 3313,
+            "monsterboard": 435
+        }
+    },
+    {
+        "State": "Zeeland",
+        "freq": {
+            "indeed": 66,
+            "monsterboard": 10
+        }
+    },
+    {
+        "State": "Noord-Brabant",
+        "freq": {
+            "indeed": 2055,
+            "monsterboard": 314
+        }
+    },
+    {
+        "State": "Limburg",
+        "freq": {
+            "indeed": 312,
+            "monsterboard": 58
+        }
+    }
+]
