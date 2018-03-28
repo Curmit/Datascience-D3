@@ -1,6 +1,18 @@
 import scrapy
 from scrapy.crawler import CrawlerProcess
 
+# CREATED BY:
+# Carmen Burghardt (Master student Creative Technology @ University of Twente)
+# Rick Lenderink (Master student Business Information Technology @ University of Twente)
+# 
+# 
+# Scraping script designed for http://wwww.indeed.nl/ in order to get, given a certain jobsearch + province, 
+# the job title and job location. 
+# 
+# This information is used to give a visual representation of the amount of vacancies available for certain studies
+# of the University of Twente. For each of the certain studies (9 in total) we came up with four job names (keywords) to search 
+# for available vacancies related to study and the field of work.
+
 opleiding = "Mechanical Engineering"
 globalTag = "Product Ingenieur wo"
 outputdir = "CrawlerResults//IndeedResults//"+ str(opleiding) +"//" + str(globalTag) + ".json"

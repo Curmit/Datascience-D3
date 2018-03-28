@@ -2,14 +2,16 @@ import scrapy
 from scrapy.crawler import CrawlerProcess
 import math as mt
 
-# opleiding = "Communication Science"
+# Script generates a JSON file of format 'jobname'.json containing all the URLs of Monsterboard split up over different pages
+# i.e. when searching for a certain vacancy Monsterboard responds with a result possibly split up over multiple pages
+# for each page there is a URL created. For example if Monsterboard responds with 10 pages of results the output JSON file
+# will contain 10 URLs which are suitable for scraping on a deeper level (and used in monsterboardScrapingScript.py).
+
 globalTag = "Process technology wo"
 outputdir = "CrawlerResults//urls//" + globalTag +".json"
 
 class QuotesSpider(scrapy.Spider):
     name = "provincesMonsterboard"
-    # globalTag = ""
-
 
     def start_requests(self):
         provinces = ["Groningen",\
@@ -24,60 +26,50 @@ class QuotesSpider(scrapy.Spider):
                     "Zeeland",\
                     "Noord__2DBrabant",\
                     "Limburg"]
+        # Variable set for the job name
         global globalTag
-        # Start url
-        
-        # data-scientist_5?where=Noord__2DHolland&cy=nl'
-        # Getting the tags from the input parameters
-        
-        # Globaltag is set to be able to add it to output file
-       
+
         # Tags are split i.e. "Data Scientist" gets split to build url
         tags = globalTag.split(" ")
         # "-" are added to indivitual tags for URL builder
         for i in range(len(tags)-1):
             tags[i] = tags[i] + "-"
 
+        # String added for the complete monsterboard URL
         tags.append("_5?where=")
-        # Correct url's are build format: "http://www.indeed.nl/data-scientist-vacatures-in-overijssel"
-        # For each province there is a request done and the spider crawls the page
+
+        # Correct url's are build format for monsterboard vacancy Accountant, province = Utrecht: ""https://www.monsterboard.nl/vacatures/zoeken/Accountant-wo_5?where=Utrecht&cy=nl&page=2""
+        
+        # For each province there is a request done (url generated) and the spider crawls the page
         for province in provinces:
             url = "https://www.monsterboard.nl/vacatures/zoeken/"
             for i in tags:
                 url += str(i)
             url += province
             url += "&cy=nl"
-            # print(url)
-            # response = scrapy.http.TextResponse(url=url)
-            # header = response.xpath('//h2[contains(@class,"page-title visible-xs")]/text()').extract()
-            # print(header)
             yield scrapy.Request(url=url, callback=self.parse)
 
-    
-
     def parse(self, response):
-    #     vacature = response.css('.result')[0]
-    #     titles = vacature.xpath('//h2[contains(@class, "jobtitle")]/a/@title').extract()
-        # locations = response.xpath('//div[contains(@class,"job-specs-location")]/p/a/text()').extract()
+  
+        # Xpath location of the province value on the page (outcome = one of the province)
         province = response.xpath('//input[contains(@placeholder,"Locatie")]/@value').extract()[0]
-        # titles = response.xpath('//div[contains(@class,"jobTitle")]/h2/a/text()').extract()  
+        # Xpath location of header of Monsterboard which contains a number representing the number of vacancies (searchresults)
         header = response.xpath('//h2[contains(@class,"page-title visible-xs")]/text()').extract()
-        #companies = vacature.xpath('//div[contains(@data-tn-component, "organicJob")]/span[contains(@class, "company")]/text()').extract()
         if len(header) == 0:
             header.append("empty")
         headerList = [int(s) for s in header[0].split() if s.isdigit()]
+        # Header is used to extract the number of searchresults from Monsterboard
         numberResult = headerList[0] if len(headerList) > 0 else 0 
         url = response.url
         urlList = []
-        # self.logger.info("Size of urlList = " + str(len(urlList)))
-
         
+        # Each page represents 25 results. Total amount of resuls are divided by 25 to create the correct amount of pages
         pages = mt.ceil(numberResult/25)
         for i in range(1,pages + 1):
             urlList.append(url + "&page=" + str(i))
 
-        
-        #print("list size: " + str(len(titles)) + "locations size: " + str(len(locations)) + "companies size: " + str(len(companies)))
+
+        # loop which creates the JSON format as output file containing, reportedResults, URL, PageNumber, Province
         for i in range(0,len(urlList)):
             if numberResult > 0:
                 yield {
@@ -87,12 +79,6 @@ class QuotesSpider(scrapy.Spider):
                     'province': province,
                 }
         
-            
-        # next_page = response.xpath('//span[@class="np" and contains(.,"Volgende")]/../../@href').extract_first()
-        # if next_page is not None:
-        #     next_page = response.urljoin(next_page)
-        #     yield scrapy.Request(next_page, callback=self.parse)
-
 process = CrawlerProcess({
     'USER_AGENT': 'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1)',
     'FEED_FORMAT': 'json',
