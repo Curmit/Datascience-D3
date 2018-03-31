@@ -13,6 +13,7 @@ from scrapy.crawler import CrawlerProcess
 # of the University of Twente. For each of the certain studies (9 in total) we came up with four job names (keywords) to search 
 # for available vacancies related to study and the field of work.
 
+# Variables in order to create the correct output files.
 opleiding = "Mechanical Engineering"
 globalTag = "Product Ingenieur wo"
 outputdir = "CrawlerResults//IndeedResults//"+ str(opleiding) +"//" + str(globalTag) + ".json"
@@ -20,6 +21,11 @@ outputdir = "CrawlerResults//IndeedResults//"+ str(opleiding) +"//" + str(global
 class QuotesSpider(scrapy.Spider):
     name = "provincesIndeed"
     
+    # Function that generates a URL for all provinces given a jobSearch
+    # a job search is divided into multiple tasks per province since its seems that
+    # Indeed has a limit of showing approximately 1000 vacancies when a search doesn't 
+    # include a location.
+    # Url's are build in format: "http://www.indeed.nl/data-scientist-vacatures-in-overijssel"
     def start_requests(self):
         provinces = ["groningen",\
                     "friesland",\
@@ -44,7 +50,6 @@ class QuotesSpider(scrapy.Spider):
             tag = tags[i] + "-"
             tags[i] = tag
         tags.append("vacatures-in-")
-        # Correct url's are build format: "http://www.indeed.nl/data-scientist-vacatures-in-overijssel"
         # For each province there is a request done and the spider crawls the page
         for province in provinces:
             url = 'http://www.indeed.nl/'
@@ -54,10 +59,15 @@ class QuotesSpider(scrapy.Spider):
             print(url)
             yield scrapy.Request(url=url, callback=self.parse)
 
+    # Page crawler, crawls a given page
     def parse(self, response):
+        # HTML vacancy element containing details about a vacancy
         vacature = response.css('.result')[0]
+        # Title element comming from a vacancy, contains Xpath to the jobTitle
         titles = vacature.xpath('//h2[contains(@class, "jobtitle")]/a/@title').extract()
+        # Location of a vacancy (i.e. city, province or area)
         locations = vacature.xpath('//div[contains(@data-tn-component, "organicJob")]/span[contains(@class, "location")]/text()').extract()
+        # Province variable to store the province of a vacancy
         province = response.xpath('//input[contains(@name,"l") and contains(@class,"input_text")]/@value').extract()
         for i in range(0,len(titles)):
             yield {
@@ -66,6 +76,7 @@ class QuotesSpider(scrapy.Spider):
                 'location': locations[i],
                 'province': province[0]
             }
+        # Next page build in function from Scrapy which goes to the next page if there is one
         next_page = response.xpath('//span[@class="np" and contains(.,"Volgende")]/../../@href').extract_first()
         if next_page is not None:
             next_page = response.urljoin(next_page)
